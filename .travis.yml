@@ -31,8 +31,6 @@ install:
   - docker-compose build
 
 script:
-  # list all listening ports
-  - lsof -nP +c 15 | grep LISTEN
   - docker-compose up -d
   - docker ps
   - docker-compose exec test rails test
