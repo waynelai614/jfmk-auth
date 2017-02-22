@@ -26,8 +26,14 @@ before_install:
 
 install:
   - docker-compose build
+  - docker-compose exec test rails r bin/setup
+
+before_script:
+  - docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
+  - docker ps
 
 script:
-  - docker-compose up -d
-  - docker ps
   - docker-compose exec test rails test
+
+after_script:
+  - docker-compose down

@@ -1,0 +1,17 @@
+version: '2.1'
+
+services:
+  postgres:
+    expose:
+      - 5432
+
+  web:
+    expose:
+      - 3000
+
+  test:
+      expose:
+        - 3001
+
+  selenium:
+      expose: [4444, 5900]
