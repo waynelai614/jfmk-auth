@@ -6,6 +6,9 @@ rvm:
 services:
   - docker
 
+env:
+  DOCKER_COMPOSE_VERSION: 1.11.1
+
 before_install:
   - docker -v
   - docker-compose -v
@@ -14,9 +17,17 @@ before_install:
   - docker -v
   - docker-compose -v
 
+  # Once travis supports same version, the following can be removed
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - docker-compose -v
+
 install:
   - docker-compose build
 
 script:
   - docker-compose up -d
+  - docker ps
   - docker-compose exec test rails test
