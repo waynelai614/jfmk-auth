@@ -38,8 +38,6 @@ services:
       depends_on:
         - postgres
         - selenium
-      logging:
-        driver: 'none'
 
       # Allow interaction on detached sessions like byebug
       stdin_open: true
