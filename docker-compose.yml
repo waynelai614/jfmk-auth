@@ -13,7 +13,7 @@ services:
 
   web:
     depends_on:
-      - 'postgres'
+      - postgres
     build: .
     volumes:
       - '.:/jfmk_auth'
@@ -36,9 +36,14 @@ services:
       volumes:
         - '.:/jfmk_auth'
       depends_on:
+        - postgres
         - selenium
       logging:
         driver: 'none'
+
+      # Allow interaction on detached sessions like byebug
+      stdin_open: true
+      tty: true
 
   selenium:
     #image: selenium/standalone-firefox-debug:2.48.2
