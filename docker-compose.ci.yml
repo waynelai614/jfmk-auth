@@ -13,8 +13,8 @@ services:
     environment:
       - AWS_ACCESS_KEY
       - AWS_SECRET_ACCESS_KEY
-      expose:
-        - 3001
+    expose:
+      - 3001
 
   selenium:
       expose: [4444, 5900]
