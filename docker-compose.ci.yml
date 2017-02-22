@@ -10,6 +10,9 @@ services:
       - 3000
 
   test:
+    environment:
+      - AWS_ACCESS_KEY
+      - AWS_SECRET_ACCESS_KEY
       expose:
         - 3001
 
