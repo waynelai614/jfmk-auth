@@ -1,0 +1,11 @@
+.admin.users {
+  td.actions {
+    font-size: 0;
+    .btn {
+      margin: 2px 0;
+      &:not(:first-child) {
+        margin-left: 4px;
+      }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+version: '2.1'
+
+services:
+  postgres:
+    image: 'postgres:9.6.1'
+    environment:
+      POSTGRES_USER: 'jfmk_auth'
+      POSTGRES_PASSWORD: 'yourpassword'
+    ports:
+      - '5432:5432'
+    volumes:
+      - 'postgres:/var/lib/postgresql/data'
+    logging:
+      driver: 'none'
+
+  web:
+    depends_on:
+      - 'postgres'
+    build: .
+    ports:
+      - '3000:3000'
+    volumes:
+      - '.:/jfmk_auth'
+    env_file:
+      - '.env'
+
+    # Allow interaction on detached sessions like byebug
+    stdin_open: true
+    tty: true
+
+  test:
+      build: .
+      env_file:
+        - '.env'
+      environment:
+        - BIND_ON=0.0.0.0:3001
+        - RAILS_ENV=test
+      volumes:
+        - '.:/jfmk_auth'
+      depends_on:
+        - selenium
+      ports:
+        - '3001:3001'
+      logging:
+        driver: 'none'
+
+  selenium:
+    #image: selenium/standalone-firefox-debug:2.48.2
+    image: selenium/standalone-chrome-debug:3.0.1-germanium # :2.27 not working
+    ports: ["4444:4444", "5900:5900"]
+    logging:
+      driver: 'none'
+
+volumes:
+  postgres:

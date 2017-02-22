@@ -1,0 +1,25 @@
+%nav{class: 'navbar navbar-inverse'}
+  .container
+    .navbar-header
+      %button{type: 'button', class: 'navbar-toggle', data: {toggle: 'collapse', target: '.navbar-collapse'}}
+        - if @current_user.present?
+          %span{class: 'sr-only'} Toggle navigation
+          %span{class: 'icon-bar'}
+          %span{class: 'icon-bar'}
+          %span{class: 'icon-bar'}
+      = link_to ENV['SITE_TITLE'], root_path, class: 'navbar-brand'
+    - if @current_user.present?
+      .navbar-collapse.collapse
+        %ul.nav.navbar-nav.navbar-right
+          %li
+            =link_to "Log Out, #{@current_user.first_name}", logout_path, id: 'log-out'
+
+- if @page_breadcrumb.present?
+  .container
+    %ol.breadcrumb
+      - @page_breadcrumb.each_with_index do |node, idx|
+        %li{class: idx == @page_breadcrumb.size - 1 ? 'active' : ''}
+          - if node[:link].present?
+            = link_to node[:label], node[:link]
+          - else
+            = node[:label]

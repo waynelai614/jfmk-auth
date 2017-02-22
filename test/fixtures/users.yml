@@ -1,0 +1,36 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# Use custom created_at timestamp so not all the same
+<% @now = Time.now %>
+<% def stamp() @now += 0.001 end %>
+
+admin:
+  username: admin
+  password_digest: <%= BCrypt::Password.create('Secret1') %>
+  first_name: Admin
+  last_name: User
+  admin: true
+  created_at: <%= stamp %>
+
+client:
+  username: client
+  password_digest: <%= BCrypt::Password.create('Secret1') %>
+  first_name: Client
+  last_name: Smith
+  created_at: <%= stamp %>
+
+acme:
+  username: acme
+  password_digest: <%= BCrypt::Password.create('Secret1') %>
+  first_name: Acme
+  last_name: Co
+  created_at: <%= stamp %>
+
+client_locked:
+  username: clientlocked
+  password_digest: <%= BCrypt::Password.create('Secret1') %>
+  login_attempts: 3
+  login_locked: true
+  first_name: Client
+  last_name: Locked
+  created_at: <%= stamp %>

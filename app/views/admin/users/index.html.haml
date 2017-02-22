@@ -1,0 +1,17 @@
+- title 'Admin'
+- heading 'Users'
+- css_class 'admin users'
+- breadcrumb [{label: 'Admin', link: admin_path}, {label: 'Users'}]
+
+= link_to new_admin_user_path do
+  .text-right
+    #button{class: 'btn btn-success btn-lg'}
+      #i{class: 'fa fa-plus'}
+      New User
+%p
+
+%table.table.table-hover.users
+  %thead
+    = render partial: 'user'
+  %tbody
+    = render @users

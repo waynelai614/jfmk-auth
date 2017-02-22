@@ -1,0 +1,50 @@
+- title @title
+- heading @title
+- css_class 'admin users'
+- breadcrumb [{label: 'Admin', link: admin_path}, {label: 'Users', link: admin_users_path}, {label: @title}]
+
+- opts = @action == :show ? {disabled: 'disabled'} : {}
+
+- if @user.errors.any?
+  .alert.alert-danger#error-msg
+    %h4 #{pluralize(@user.errors.count, "error")} prohibited this user from being saved.
+    %ul
+      - @user.errors.full_messages.each do |msg|
+        %li #{msg}
+
+= form_for [:admin, @user], builder: Admin::UsersFormBuilder, url: {action: @action}, html: {id: 'user-form'} do |f|
+  %fieldset
+    .row
+      .col-md-6
+        - help_text = "Required. Alpha-numeric, max length 32."
+        - add_on = "<i class='fa fa-user-circle-o'></i>".html_safe
+        = f.text_field :username, 'Username', help_text, add_on, @user.errors[:username],
+        opts.merge({maxlength: 32})
+
+      .col-md-6
+        - help_text = "Required. Alpha-numeric, 6-32 characters. Must have one letter, one uppercase, one lowercase. If editing, leave password blank to keep old password."
+        - add_on = "<i class='fa fa-key'></i>".html_safe
+        = f.password_field :password, 'Password', help_text, add_on, @user.errors[:password],
+        opts.merge({maxlength: 32})
+    .row
+      .col-md-6
+        = f.text_field :first_name, 'First Name', 'Max length 32.', nil, @user.errors[:first_name],
+        opts.merge({maxlength: 32})
+
+      .col-md-6
+        = f.text_field :last_name, 'Last Name', 'Max length 32.', nil, @user.errors[:last_name],
+        opts.merge({maxlength: 32})
+    .row
+      .col-md-6
+        .checkbox
+          %label
+            = f.check_box :login_locked, opts
+            %strong Login locked.
+          %p.help-block
+            Currently user has #{@user.login_attempts} login attempts, and gets locked on 3rd attempt/fail.
+            Unlocking sets attempts back to 0.
+    .row
+      .form-group.text-right
+        = link_to @action == :show ? 'Back to Users' : 'Cancel', admin_users_path, {class: 'btn btn-lg btn-default'}
+        - unless @action == :show
+          = f.submit 'Save', {class: 'btn btn-lg btn-success', data: {disable_with: 'Saving…'}}

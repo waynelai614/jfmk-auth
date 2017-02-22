@@ -1,0 +1,22 @@
+- user = nil unless defined? user
+
+%tr{data: {id: "#{user.present? ? user.id : ''}"}}
+  - user_attributes.each do |attr|
+    - unless user.present?
+      %th= attr
+    - else
+      %td= user[attr]
+  - unless user.present?
+    %th/
+  - else
+    %td.text-right.actions
+      = link_to admin_user_path(user), class: 'btn btn-info btn-xs' do
+        #i{class: 'fa fa-search'}
+        View
+      = link_to edit_admin_user_path(user), class: 'btn btn-primary btn-xs' do
+        #i{class: 'fa fa-pencil'}
+        Edit
+      = link_to admin_user_path(user), method: :delete, class: 'btn btn-danger btn-xs',
+      data: {confirm: "Are you sure you want to delete user '#{user.username}'?"} do
+        #i{class: 'fa fa-times'}
+        Delete
