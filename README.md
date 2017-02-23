@@ -34,9 +34,9 @@ Simple Rails user management & authentication web app to proxy serve a private J
 docker -v; docker-compose -v
 ```
 
-## Reccomended
-1. Install [pgAdmin]([pgAdmin](https://www.pgadmin.org/download/)) for a SQL gui client. 
-2. Install [NC Viewer](https://www.realvnc.com/download/viewer/) to view & interact with selenium sessions that would otherwise be headless.
+## Recommended
+1. Install [pgAdmin](https://www.pgadmin.org/download/) for a SQL gui client. 
+2. Install [VNC Viewer](https://www.realvnc.com/download/viewer/) to view & interact with selenium sessions that would otherwise be headless.
 
 # Build
 
