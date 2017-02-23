@@ -4,7 +4,7 @@ JFMK-Auth [![Build Status](https://travis-ci.org/jfroom/jfmk-auth.svg?branch=mas
 # Overview
 Simple Rails user management & authentication web app to proxy serve a private JavaScript based Single-Page App (SPA) with pre-signed, expiring content URLs from AWS S3.
  
-##Technologies
+## Technologies
 
 - Rails 5, Postgres, Selenium, AWS S3, Bootstrap, SCSS, CoffeeScript 
 - Docker Compose for development, test and Travis CI. :tada: 
@@ -22,9 +22,9 @@ Simple Rails user management & authentication web app to proxy serve a private J
 - Fork it if you want, but this repo probably won't be closely maintained. See 'caveats' below on how you could mod it to peel out just the user management aspect with static content views.
 - IMHO the most valuable part of this repo right now worth lifting are the docker services.
 
-#Usage
+# Usage
 
-##Getting started
+## Getting started
 
 1. Install [Docker](https://www.docker.com/) 1.13.1+. This should also install Docker Compose 1.11.1+.
 2. Verify versions: 
@@ -32,8 +32,7 @@ Simple Rails user management & authentication web app to proxy serve a private J
 docker -v; docker-compose -v
 ```
 
-
-##First run
+## First run
 
 Build the docker images:
 ```
@@ -50,7 +49,7 @@ Seed the database with two users: `admin:Admin123` and `user:User123`. Use the a
 docker-compose exec web rails db:seed
 ```
 
-###Development 
+## Development 
 
 Stand up all services:
 ```
@@ -75,7 +74,7 @@ If any .Gemfile has changed, docker web image needs to be rebuilt with the follo
 docker-compose build
 ```
 
-###Test
+### Test
 
 Run tests (also importantly sets Rails.env = 'test')
 ```
@@ -89,10 +88,9 @@ vnc://localhost:5900  password:secret
 
 The test app instance can also be see locally at `http://localhost:3001/`.
 
-##Caveats
+## Caveats
 
-- [__S3Auth.__](https://github.com/yegor256/s3auth). If you want a quick way to just password protect a static S3 website with Basic HTTP Auth, check out this S3Auth, and this related [article](http://www.yegor256.com/2014/04/21/s3-http-basic-auth.html).
-- __S3 auth proxy.__ There are a few other project that handle [S3 proxy with authentication](https://www.google.com/search?q=s3+proxy+auth). But one drawback is the app server becomes a bottleneck — which becomes more obvious for large files like video. The use of pre-signed S3 expiring content URLs, and a mix of publicly served S3 non-sensitive files (e.g. JS, CSS) alleviates this. Admittedly, the proxy/injection I've cooked up is a little brittle — which leads to my next point.
+- __[S3Auth.com](http://s3auth.com)__ If you want a quick way to just password protect a static S3 website with Basic HTTP Auth, check out [S3Auth](https://github.com/yegor256/s3auth), and this related [article](http://www.yegor256.com/2014/04/21/s3-http-basic-auth.html).
+- __S3 auth proxy.__ There are a few other project that handle [S3 proxy with authentication](https://www.google.com/search?q=s3+proxy+auth). But one drawback is the app server becomes a bottleneck — which becomes more obvious for large files like video. A mix of pre-signed S3 expiring private content URLs, and publicly served S3 non-sensitive files (e.g. JS, CSS, some content) alleviates this. Admittedly, the proxy/injection I've cooked up is a little brittle — which leads to my next point.
 - __Simple content views.__ `app/controllers/pages_controller` which parses/proxies/pre-signs S3 content is tightly coupled to my personal needs. If you choose to clone/fork this project for the user management aspect, you'll probably want to yank that controller, related tests, and environment vars. You could just replace it with [orats](https://github.com/nickjj/orats](nickjj/orats)' simpler `PagesController` for basic HTML views.
-- __Devise.__ In future projects I will use [Devise](https://github.com/plataformatec/devise) for authentication. Just wanted to write my own first to better understand the process. 
-
+- __Devise.__ In future projects I will use [Devise](https://github.com/plataformatec/devise) for authentication. Just wanted to write my own first to better understand the auth & user management process. 
