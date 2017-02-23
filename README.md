@@ -22,9 +22,9 @@ Simple Rails user management & authentication web app to proxy serve a private J
 - Fork it if you want, but this repo probably won't be closely maintained. See 'caveats' below on how you could mod it to peel out just the user management aspect with static content views.
 - IMHO the most valuable part of this repo right now worth inspecting are the docker services & selenium configuration.
 
-# Usage
 
-## Getting started
+
+# Getting started
 
 1. Install [Docker](https://www.docker.com/) 1.13.1+. This should also install Docker Compose 1.11.1+.
 2. Verify versions: 
@@ -32,61 +32,36 @@ Simple Rails user management & authentication web app to proxy serve a private J
 docker -v; docker-compose -v
 ```
 
+# Build
+
 ## First run
 
-Build the docker images:
-```
-docker-compose build
-```
+`docker-compose up` Build the docker images.
 
-Set up rails and the database:
-```
-docker-compose exec web rails r bin/setup
-```
+`docker-compose exec web rails r bin/setup` Set up rails and the database.
 
-Seed the database with two users: `admin:Admin123` and `user:User123`. Use the admin login to change those immediately.
-```
-docker-compose exec web rails db:seed
-```
+`docker-compose exec web rails db:seed` Seed the database with two users: `admin:Admin123` and `user:User123`. Use the admin login to change those immediately.
 
 ## Development 
 
-Stand up all services:
-```
-docker-compose up
-```
-And then visit `http://localhost:3000/` to see the web service.
+`docker-compose up` Stand up all services.
 
-A common call chain to stop any existing/hung containers, stand up all services in detached mode, connect to view 
-web service only (to view running log and interact with byebug):
-```
-docker-compose down; docker-compose up -d; docker attach jfmkauth_web_1
+`http://localhost:3000/` Visit the web app service.
 
-```
+`docker-compose down; docker-compose up -d; docker attach jfmkauth_web_1`
+A common call chain to stop any existing/hung containers, stand up all services in detached mode, connect to view web service only (to view running log and interact with byebug).
 
-After a pull or update:
-```
-docker-compose exec web rails r bin/update
-```
+`docker-compose exec web rails r bin/update` After a pull or update.
 
-If any .Gemfile has changed, docker web image needs to be rebuilt with the following (TODO: make this more dynamic, seems to be a common problem in the docker/rails community):
-```
-docker-compose build
-```
+`docker-compose build` If any .Gemfile has changed, docker web image needs to be rebuilt with the following (TODO: make this more dynamic, seems to be a common problem in the docker/rails community).
 
 ## Test
 
-Run tests (also importantly sets Rails.env = 'test')
-```
-docker-compose exec test rails test
-```
+`docker-compose exec test rails test` Run tests (also importantly sets Rails.env = 'test').
 
-To interactive with and debug Selenium sessions, use VNC to connect to the Selenium service. []VNC Viewer](https://www.realvnc.com/download/viewer/) works well, and on OS X Screen Sharing app is built-in.
-```
-vnc://localhost:5900  password:secret
-```
+`vnc://localhost:5900  password:secret` To interactive with and debug Selenium sessions, use VNC to connect to the Selenium service. []VNC Viewer](https://www.realvnc.com/download/viewer/) works well, and on OS X Screen Sharing app is built-in.
 
-The test app instance can also be see locally at `http://localhost:3001/`.
+`http://localhost:3001/` Visit the test app service.
 
 # Caveats
 
