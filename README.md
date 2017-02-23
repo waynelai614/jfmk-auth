@@ -26,11 +26,17 @@ Simple Rails user management & authentication web app to proxy serve a private J
 
 # Getting started
 
+## Required
+
 1. Install [Docker](https://www.docker.com/) 1.13.1+. This should also install Docker Compose 1.11.1+.
 2. Verify versions: 
 ```
 docker -v; docker-compose -v
 ```
+
+## Reccomended
+1. Install [pgAdmin]([pgAdmin](https://www.pgadmin.org/download/)) for a SQL gui client. 
+2. Install [NC Viewer](https://www.realvnc.com/download/viewer/) to view & interact with selenium sessions that would otherwise be headless.
 
 # Build
 
@@ -55,11 +61,17 @@ A common call chain to stop any existing/hung containers, stand up all services 
 
 `docker-compose build` If any .Gemfile has changed, docker web image needs to be rebuilt with the following (TODO: make this more dynamic, seems to be a common problem in the docker/rails community).
 
+
+## Database
+
+Launch [pgAdmin](https://www.pgadmin.org/download/) and configure a connection to:
+`Host: 0.0.0.0`, `Port: 5432`, `User: jfmk_auth`, `Password: yourpassword`. See if you can find the dev & test databases, and the users table with seed users (Schemas > Public > Tables or use the SQL panel).
+
 ## Test
 
 `docker-compose exec test rails test` Run tests (also importantly sets Rails.env = 'test').
 
-`vnc://localhost:5900  password:secret` To interactive with and debug Selenium sessions, use VNC to connect to the Selenium service. []VNC Viewer](https://www.realvnc.com/download/viewer/) works well, and on OS X Screen Sharing app is built-in.
+`vnc://localhost:5900  password:secret` To interactive with and debug Selenium sessions, use VNC to connect to the Selenium service. [VNC Viewer](https://www.realvnc.com/download/viewer/) works well, and on OS X Screen Sharing app is built-in.
 
 `http://localhost:3001/` Visit the test app service.
 
