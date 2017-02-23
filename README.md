@@ -20,7 +20,7 @@ Simple Rails user management & authentication web app to proxy serve a private J
 - Needed a way to privately share an instance of my static portfolio site. 
 - Chose to 'roll my own' solution to gain experience with technologies & APIs above.
 - Fork it if you want, but this repo probably won't be closely maintained. See 'caveats' below on how you could mod it to peel out just the user management aspect with static content views.
-- IMHO the most valuable part of this repo right now worth lifting are the docker services.
+- IMHO the most valuable part of this repo right now worth inspecting are the docker services & selenium configuration.
 
 # Usage
 
@@ -74,7 +74,7 @@ If any .Gemfile has changed, docker web image needs to be rebuilt with the follo
 docker-compose build
 ```
 
-### Test
+## Test
 
 Run tests (also importantly sets Rails.env = 'test')
 ```
@@ -88,7 +88,7 @@ vnc://localhost:5900  password:secret
 
 The test app instance can also be see locally at `http://localhost:3001/`.
 
-## Caveats
+# Caveats
 
 - __[S3Auth.com](http://s3auth.com)__ If you want a quick way to just password protect a static S3 website with Basic HTTP Auth, check out [S3Auth](https://github.com/yegor256/s3auth), and this related [article](http://www.yegor256.com/2014/04/21/s3-http-basic-auth.html).
 - __S3 auth proxy.__ There are a few other project that handle [S3 proxy with authentication](https://www.google.com/search?q=s3+proxy+auth). But one drawback is the app server becomes a bottleneck — which becomes more obvious for large files like video. A mix of pre-signed S3 expiring private content URLs, and publicly served S3 non-sensitive files (e.g. JS, CSS, some content) alleviates this. Admittedly, the proxy/injection I've cooked up is a little brittle — which leads to my next point.
