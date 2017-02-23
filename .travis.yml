@@ -35,7 +35,6 @@ install:
 before_script:
   - docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
   - docker ps
-  - docker-compose exec test printenv AWS_ACCESS_KEY
   - docker-compose exec test rails r bin/setup
 
 script:
