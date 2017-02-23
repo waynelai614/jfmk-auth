@@ -2,6 +2,9 @@ require "test_helper"
 require "acceptance/page_obs/sessions_page"
 require "acceptance/page_obs/pages_page"
 
+# TODO: Use Clearance gem to speed up logins where not required to explicitly test authentication
+# https://github.com/thoughtbot/clearance
+
 class SessionsTest < AcceptanceTest
   before do
     @sessions_page = SessionsPage.new
@@ -97,4 +100,5 @@ class SessionsTest < AcceptanceTest
 
   # TODO: How to test content expiration/logout timeout? Could fake it in a controller/integration test.
   # Can't figure out how to set ENV var for a single capy/selenium test
+  # Integration solution: http://stackoverflow.com/a/6501780/281809
 end
