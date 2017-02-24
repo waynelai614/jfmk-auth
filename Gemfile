@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+ruby '2.3.3'
 
 # Looking to use the Edge version? gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.1'
