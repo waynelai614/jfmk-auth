@@ -58,6 +58,9 @@ gem 'bcrypt', '~> 3.1', '>= 3.1.11'
 # HTML Abstraction Markup Language
 gem 'haml', '~> 4.0.5'
 
+# Load .env files into ENV. Any host defined env vars will override .env file vars.
+gem 'dotenv', '~> 2.2.0'
+
 group :development, :test do
   # Call 'byebug' anywhere in your code to drop into a debugger console
   gem 'byebug', platform: :mri

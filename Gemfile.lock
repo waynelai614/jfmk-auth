@@ -79,6 +79,7 @@ GEM
     coffee-script-source (1.12.2)
     concurrent-ruby (1.0.4)
     debug_inspector (0.0.2)
+    dotenv (2.2.0)
     erubis (2.7.0)
     execjs (2.7.0)
     ffi (1.9.17)
@@ -239,6 +240,7 @@ DEPENDENCIES
   byebug
   capybara_minitest_spec (~> 1.0)
   coffee-rails (~> 4.2.1)
+  dotenv (~> 2.2.0)
   font-awesome-rails (~> 4.7)
   haml (~> 4.0.5)
   jbuilder (~> 2.5)
