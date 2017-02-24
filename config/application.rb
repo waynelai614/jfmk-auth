@@ -13,7 +13,7 @@ module JfmkAuth
 
     # Set up logging to be the same in all environments but control the level
     # through an environment variable.
-    config.log_level = ENV['LOG_LEVEL']
+    config.log_level = ENV.fetch('LOG_LEVEL') {'debug'}
 
     # Log to STDOUT because Docker expects all processes to log here. You could
     # then redirect logs to a third party service on your own such as systemd,
@@ -47,12 +47,12 @@ module JfmkAuth
     config.cache_store = :memory_store, { size: 64.megabytes }
 
     # Action Cable setting to de-couple it from the main Rails process.
-    config.action_cable.url = ENV['ACTION_CABLE_FRONTEND_URL']
+    #config.action_cable.url = ENV['ACTION_CABLE_FRONTEND_URL']
 
     # Action Cable setting to allow connections from these domains.
-    origins = ENV['ACTION_CABLE_ALLOWED_REQUEST_ORIGINS'].split(',')
-    origins.map! { |url| /#{url}/ }
-    config.action_cable.allowed_request_origins = origins
+    #origins = ENV['ACTION_CABLE_ALLOWED_REQUEST_ORIGINS'].split(',')
+    #origins.map! { |url| /#{url}/ }
+    #config.action_cable.allowed_request_origins = origins
 
     # Gzip responses
     config.middleware.use Rack::Deflater
