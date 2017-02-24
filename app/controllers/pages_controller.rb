@@ -58,10 +58,9 @@ class PagesController < ApplicationController
       render body: out, content_type: 'text/html'
 
     rescue Aws::S3::Errors::ServiceError => e
-      render text: %(
-S3 error occurred. Are environment AWS credentials set?<p/>
+      render body: %(
+Error: #{e.class}: #{e.message}
 Try reloading the browser, or contact administrator.
-#{e.class}: #{e.message}
 )
     end
   end
