@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -qq -y --no-install-recommends \
 RUN gem uninstall -i /usr/local/lib/ruby/gems/2.3.0 bundler
 RUN gem install bundler -v=1.13.7
 RUN bundler -v
-# Use same bundler version as Heroku
+# Use same bundler version as Heroku (as of 2/2017)
 
 ENV INSTALL_PATH /jfmk_auth
 # The name of the application is jfmk_auth and while there
@@ -51,7 +51,7 @@ WORKDIR $INSTALL_PATH
 # By doing this, Docker will be smart enough to execute all
 # future commands from within this directory.
 
-COPY Gemfile ./
+COPY Gemfile Gemfile.lock ./
 # This is going to copy in the Gemfile and Gemfile.lock from our
 # work station at a path relative to the Dockerfile to the
 # jfmk_auth/ path inside of the Docker image.
