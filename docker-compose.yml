@@ -29,8 +29,7 @@ services:
       env_file:
         - '.env'
       environment:
-        - BIND_ON=0.0.0.0
-        - PORT=3001
+        - BIND_ON=0.0.0.0:3001
         - RAILS_ENV=test
         - SELENIUM_HOST=selenium
         - TEST_APP_HOST=test
