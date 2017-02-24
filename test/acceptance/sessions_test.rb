@@ -74,12 +74,12 @@ class SessionsTest < AcceptanceTest
 
     # Content page finally loads
     assert_current_path root_path
-    assert @pages_page.has_nav?
+    assert @pages_page.has_proxy_content?
 
     # User stays logged in upon reload
     reload!
     assert_current_path root_path
-    assert @pages_page.has_nav?
+    assert @pages_page.has_proxy_content?
 
     # Going to login page when logged in redirects to home page
     visit login_path

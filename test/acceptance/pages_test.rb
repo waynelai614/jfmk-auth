@@ -15,7 +15,7 @@ class PagesTest < AcceptanceTest
     @sessions_page.click_login_btn
 
     assert_current_path root_path
-    assert @pages_page.has_nav?
+    assert @pages_page.has_proxy_content?
     assert @pages_page.has_log_out?('Client')
 
     assert @pages_page.has_work_thumb_presigned_image?(0)

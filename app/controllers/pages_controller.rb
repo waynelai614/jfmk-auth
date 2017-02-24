@@ -16,53 +16,45 @@ class PagesController < ApplicationController
     # Content should expire slightly after session expires to prevent a race condition on the reload
     @expires_after_seconds = ApplicationController::SESSION_EXPIRES_AFTER_SECONDS + 5
 
-    begin
-      # Get private static index.html page.
-      resp = Aws::S3::Client.new.get_object(
-          bucket: ENV['CONTENT_S3_INDEX_PAGE_BUCKET'],
-          key: ENV['CONTENT_S3_INDEX_PAGE_KEY']
+    # Get private static index.html page.
+    resp = Aws::S3::Client.new.get_object(
+        bucket: ENV['CONTENT_S3_INDEX_PAGE_BUCKET'],
+        key: ENV['CONTENT_S3_INDEX_PAGE_KEY']
+    )
+    out = resp.body.string
+    out = ActiveSupport::Gzip.decompress out if resp.content_encoding == 'gzip'
+
+    # Inject 'base' meta tag so js/css/util-images load from the public S3 bucket,
+    # and force reload on timeout so pre-signed urls don't expire while in a session.
+    out.sub!("<head>", "<head>#{html_head_inject}")
+
+    # Replace private S3 img/video asset urls with expiring presigned S3 urls.
+    reg = /(\/\/#{ENV['CONTENT_S3_ASSETS_REGEXP_BUCKET_PATH']})\
+            (#{ENV['CONTENT_S3_ASSETS_KEY_PREFIX']}\/[^"']+)/ix
+    out.gsub!(reg) do
+      key = Regexp.last_match[2]
+      url = Aws::S3::Presigner.new.presigned_url(
+          :get_object,
+          bucket: ENV['CONTENT_S3_ASSETS_BUCKET'],
+          key: key,
+          expires_in: @expires_after_seconds
       )
-      out = resp.body.string
-      out = ActiveSupport::Gzip.decompress out if resp.content_encoding == 'gzip'
-
-      # Inject 'base' meta tag so js/css/util-images load from the public S3 bucket,
-      # and force reload on timeout so pre-signed urls don't expire while in a session.
-      out.sub!("<head>", "<head>#{html_head_inject}")
-
-      # Replace private S3 img/video asset urls with expiring presigned S3 urls.
-      reg = /(\/\/#{ENV['CONTENT_S3_ASSETS_REGEXP_BUCKET_PATH']})\
-              (#{ENV['CONTENT_S3_ASSETS_KEY_PREFIX']}\/[^"']+)/ix
-      out.gsub!(reg) do
-        key = Regexp.last_match[2]
-        url = Aws::S3::Presigner.new.presigned_url(
-            :get_object,
-            bucket: ENV['CONTENT_S3_ASSETS_BUCKET'],
-            key: key,
-            expires_in: @expires_after_seconds
-        )
-        url
-      end
-
-      if ENV['GOOGLE_ANALYTICS_UA'].present?
-        # Inject Google Analytics ID & userId
-        out.sub! /(ga\('create',).*\);/,
-                 "ga('create', '#{ENV['GOOGLE_ANALYTICS_UA']}', '#{ENV['GOOGLE_ANALYTICS_PRODUCTION_HOSTNAME']}');"
-        out.sub! /\/\/ ga\('set', 'userId', '\#\{USER_ID\}'\);/,
-                 "ga('set', 'userId', '#{@current_user.username}');"
-      end
-
-      # Inject 'Log Out, Name'
-      out.gsub! '<!--#{AUTH_LOG_OUT}-->', html_log_out
-
-      # Render processed index page back to browser
-      render body: out, content_type: 'text/html'
-
-    rescue Aws::S3::Errors::ServiceError => e
-      render body: %(
-Error: #{e.class}: #{e.message}
-Try reloading the browser, or contact administrator.
-)
+      url
     end
+
+    if ENV['GOOGLE_ANALYTICS_UA'].present?
+      # Inject Google Analytics ID & userId
+      out.sub! /(ga\('create',).*\);/,
+               "ga('create', '#{ENV['GOOGLE_ANALYTICS_UA']}', '#{ENV['GOOGLE_ANALYTICS_PRODUCTION_HOSTNAME']}');"
+      out.sub! /\/\/ ga\('set', 'userId', '\#\{USER_ID\}'\);/,
+               "ga('set', 'userId', '#{@current_user.username}');"
+    end
+
+    # Inject 'Log Out, Name'
+    out.gsub! '<!--#{AUTH_LOG_OUT}-->', html_log_out
+
+    # Render processed index page back to browser
+    render body: out, content_type: 'text/html'
   end
 
   private

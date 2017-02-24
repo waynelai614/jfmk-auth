@@ -1,8 +1,14 @@
 require "acceptance/page_obs/base_page"
 
 class PagesPage < Pages::Base
-  def has_nav?
-    page.has_css?('nav.navbar', text: 'Site Title Work About Blog')
+  def has_proxy_content?
+    unless page.has_no_content?("Aws::Errors") && page.has_no_content?("Aws::S3::Errors")
+      raise "Expected to find no AWS errors, but found: \n\n #{page.text}"
+    end
+    unless page.has_css?('nav.navbar', text: 'Site Title Work About Blog')
+      raise "Expected to find proxy content navbar, but found: \n\n #{page.text}"
+    end
+    true
   end
 
   def has_work_thumb_presigned_image?(idx)

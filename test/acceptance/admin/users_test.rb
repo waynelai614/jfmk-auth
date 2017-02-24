@@ -133,7 +133,7 @@ class Admin::UsersTest < AcceptanceTest
     @sessions_page.fill_login my_user2[:username], my_user2[:password]
     @sessions_page.click_login_btn
     assert_current_path root_path
-    assert @pages_page.has_nav?
+    assert @pages_page.has_proxy_content?
 
     # Logout
     visit logout_path
