@@ -12,7 +12,7 @@
       - @user.errors.full_messages.each do |msg|
         %li #{msg}
 
-= form_for [:admin, @user], builder: Admin::UsersFormBuilder, url: {action: @action}, html: {id: 'user-form'} do |f|
+= form_for [:admin, @user], builder: Admin::UsersFormBuilder, html: {id: 'user-form'} do |f|
   %fieldset
     .row
       .col-md-6
