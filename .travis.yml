@@ -43,3 +43,13 @@ script:
 after_script:
   - docker-compose logs > ./log/docker-ci.log
   - docker-compose down
+
+deploy:
+  provider: heroku
+  app: jfmk-auth-staging
+  api_key:
+    secure: 1yKeC+Hz8mkXO1lzJPuxCnNK5YXUCrs5fB7mb2UEelLy9M3Wdc/MPcDO9bh03xJU7L7b63NmKpC10T2dGNmdslOeFBKAKgrWihtMTPThMJvDWjc4pa1Xhtwv6t8xjtMZMDdQBwb21/B0Tuo+YmHM0VQ+OKMJhV+HFuMrVI0ZtiH/Ow0retr4wI7+V5/TMmX1p/Y9PfPg5Kifdw3JXPgfRI4AQ2Ckzpw73OTqrweddAxGWuCpkJ1QftgcMUyzwLdnt9BNHkx66OdgeJQ5/UUhFD0YpkJHzhkYIch5fidlOiC4uaS/XVvb/mqQ4V59M7gd/vs84paPbYKJEDWV/8I7fMifHyZ8vJVRdbisicf04GJaWTiSJJC3FnefQeiyWRkH+GjZi/4l4Y+Hni2Aq05UL9oXftXN4TguPnonSJuY+0WcD8+ruouzzHN31Tg/0qaRUZEMqRHmuyg6bsC05jRroY4aaChaD47d+43QoEYMkhVc5E9gZMYLMLkSx2TfIOjRiWoGHIqCiv428xPPRk+9qtqL7EjGuI3R/LcBGqop9tH1XJsc/sS0P+3+D81ie4anJnBfUDLjcc9S8svzEwyMFH7719KgPC8MCvPsdjjM4p6vneD31Z2QVZKNFGGATXarTSna0m1XxNKvj9qoxoSvIGmEQY2VYLZKr/IVou6z39w=
+  before_deploy:
+    - 'rails db:migrate'
+    - 'rails db:schema:cache:clear'
+    - restart
