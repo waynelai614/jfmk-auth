@@ -1,12 +1,12 @@
 require "test_helper"
 require "acceptance/page_obs/sessions_page"
-require "acceptance/page_obs/pages_page"
+require "acceptance/page_obs/proxy_page"
 require "acceptance/page_obs/admin/users_page"
 
 class Admin::UsersTest < AcceptanceTest
   before do
     @sessions_page = SessionsPage.new
-    @pages_page = PagesPage.new
+    @proxy_page = ProxyPage.new
     @user_page = Admin::UsersPage.new
   end
 
@@ -133,7 +133,7 @@ class Admin::UsersTest < AcceptanceTest
     @sessions_page.fill_login my_user2[:username], my_user2[:password]
     @sessions_page.click_login_btn
     assert_current_path root_path
-    assert @pages_page.has_proxy_content?
+    assert @proxy_page.has_proxy_content?
 
     # Logout
     visit logout_path

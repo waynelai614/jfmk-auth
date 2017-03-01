@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root 'pages#index'
+  root 'proxy#index'
 
   get 'login', to: 'sessions#index'
   post 'login', to: 'sessions#login'

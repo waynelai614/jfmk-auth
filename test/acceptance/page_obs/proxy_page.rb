@@ -1,6 +1,6 @@
 require "acceptance/page_obs/base_page"
 
-class PagesPage < Pages::Base
+class ProxyPage < Pages::Base
   def has_proxy_content?
     unless page.has_no_content?("Aws::Errors") && page.has_no_content?("Aws::S3::Errors")
       raise "Expected to find no AWS errors, but found: \n\n #{page.text}"

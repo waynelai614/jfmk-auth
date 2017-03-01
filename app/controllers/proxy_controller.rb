@@ -1,14 +1,14 @@
-class PagesController < ApplicationController
+class ProxyController < ApplicationController
   def index
 
     # How to share a single page web app behind a strong auth system? Proxying all files is slow and resource intensive.
     # There is probably a better way of doing this, but the following works for now.
 
-    # On S3 there is a single page Angular app index.html page with embedded data, it is 'authenticated-read' access.
+    # On S3 there is a single page Angular app index.html page with embedded data, it is in a private bucket.
     # - Proxy it into this controller.
-    # The rest of the JS/CSS/util-images are in same bucket with 'public-read' access.
+    # The rest of the JS/CSS/util-images are in a public bucket.
     # - Inject meta base tag for them into the index proxy file.
-    # The page data has several private image/video assets that point to another 'authenticated-read' bucket.
+    # The page data has several private image/video assets that point to the private bucket.
     # - Create expiring signed URLs for them.
     # Inject javascript to redirect to /logout on timeout that matches when content expires
     # Inject logout button into header nav on right, and GA vars

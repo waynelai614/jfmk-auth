@@ -1,6 +1,6 @@
 require "test_helper"
 require "acceptance/page_obs/sessions_page"
-require "acceptance/page_obs/pages_page"
+require "acceptance/page_obs/proxy_page"
 
 # TODO: Use Clearance gem to speed up logins where not required to explicitly test authentication
 # https://github.com/thoughtbot/clearance
@@ -8,7 +8,7 @@ require "acceptance/page_obs/pages_page"
 class SessionsTest < AcceptanceTest
   before do
     @sessions_page = SessionsPage.new
-    @pages_page = PagesPage.new
+    @proxy_page = ProxyPage.new
   end
 
   def verify_login_page
@@ -74,12 +74,12 @@ class SessionsTest < AcceptanceTest
 
     # Content page finally loads
     assert_current_path root_path
-    assert @pages_page.has_proxy_content?
+    assert @proxy_page.has_proxy_content?
 
     # User stays logged in upon reload
     reload!
     assert_current_path root_path
-    assert @pages_page.has_proxy_content?
+    assert @proxy_page.has_proxy_content?
 
     # Going to login page when logged in redirects to home page
     visit login_path
