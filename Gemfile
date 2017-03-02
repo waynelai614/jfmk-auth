@@ -61,6 +61,14 @@ gem 'haml', '~> 4.0.5'
 # Load .env files into ENV. Any host defined env vars will override .env file vars.
 gem 'dotenv-rails', '~> 2.2.0'
 
+# Heroku CLI with Let's Encrypt API calls.
+# Until the new API calls are generally available, you must manually specify my fork
+# of the Heroku API gem:
+gem 'platform-api', git: 'https://github.com/jalada/platform-api', branch: 'master'
+
+# Let's Encrypt for SSL on Heroku
+gem 'letsencrypt-rails-heroku', group: 'production'
+
 group :development, :test do
   # Call 'byebug' anywhere in your code to drop into a debugger console
   gem 'byebug', platform: :mri
@@ -70,7 +78,7 @@ group :development do
   # Enable a debug toolbar to help profile your application
   gem 'rack-mini-profiler', '~> 0.10'
 
-  # Access an IRB console on exception pages or by using <%= console %>
+  # Access an IRB console on exception proxy or by using <%= console %>
   gem 'web-console', '~> 3.3.0'
 
   # Get notified of file changes. Read more: https://github.com/guard/listen

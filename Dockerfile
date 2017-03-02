@@ -17,10 +17,10 @@ FROM ruby:2.3-slim
 # Docker images. Think of it like GitHub but for Docker images.
 
 RUN apt-get update && apt-get install -qq -y --no-install-recommends \
-      build-essential nodejs libpq-dev
+      build-essential nodejs libpq-dev git
 # Ensure that our apt package list is updated and install a few
-# packages to ensure that we can compile assets (nodejs) and
-# communicate with PostgreSQL (libpq-dev).
+# packages to ensure that we can compile assets (nodejs),
+# communicate with PostgreSQL (libpq-dev), bundle install from a git repo (git).
 
 RUN gem uninstall -i /usr/local/lib/ruby/gems/2.3.0 bundler
 RUN gem install bundler -v=1.13.7

@@ -34,6 +34,10 @@ Rails.application.configure do
   # and use secure cookies.
   config.force_ssl = true
 
+  # Add middleware for Let's Encrypt before SSL redirects.
+  # LetsEncrypt does not allow redirects on their verification requests
+  config.middleware.insert_before ActionDispatch::SSL, Letsencrypt::Middleware
+
   config.action_mailer.perform_caching = false
 
   # Ignore bad email addresses and do not raise email delivery errors.
