@@ -1,5 +1,7 @@
-JFMK-Auth [![Build Status](https://travis-ci.org/jfroom/jfmk-auth.svg?branch=master)](https://travis-ci.org/jfroom/jfmk-auth)
+JFMK-Auth 
 ==========
+
+[![Build Status](https://travis-ci.org/jfroom/jfmk-auth.svg?branch=master)](https://travis-ci.org/jfroom/jfmk-auth)
 
 # Overview
 
@@ -14,11 +16,6 @@ Simple Rails user management & authentication web app to proxy a private single-
 - VNC locally into the Selenium session to interact and debug.
 - Authenticated users are served single-page app with a proxied index page, and expiring pre-signed URLs for sensitive S3 hosted content are parsed/injected. Demo content is instance of [jfroom/portfolio-web](//github.com/jfroom/portfolio-web).
 - Project initially seeded with [nickjj/orats](nickjj/orats) template.
-
-## Intent
- 
- - Privately share an instance of my static portfolio site.
- - Chose to 'roll my own' solution to gain experience with technologies & APIs above. See [Caveats](#caveats) for alternative approaches.
 
 # Getting started
 
@@ -70,30 +67,41 @@ A common call chain to stop any existing/hung containers, stand up all services 
 
 `vnc://localhost:5900  password:secret` To interactive with and debug Selenium sessions, use VNC to connect to the Selenium service. [VNC Viewer](https://www.realvnc.com/download/viewer/) works well, and on OS X Screen Sharing app is built-in.
 
-`open http://localhost:3001/` Visit the test app service.
+To visit the test app on local machine: `open http://localhost:3001/`. To visit in the VNC session visit: `http://test:3001`. 
 
 Commits to master are automatically tested by [Travis CI](https://travis-ci.org/jfroom/jfmk-auth). 
 
 ## Deploy
 
-Deploys to a [Heroku pipeline](https://devcenter.heroku.com/articles/pipelines) to three different apps: staging, demo and production. If the Travis build passes, master is continuously deployed to the staging app. Currently, releases are infrequent, so just using the Heroku Pipelines GUI to promote staging to demo & prod. 
+### Environment
+Deploys to a [Heroku pipeline](https://devcenter.heroku.com/articles/pipelines) to three different apps: staging, demo and production. Currently, releases are infrequent, so just using the Heroku Pipelines GUI to promote staging to demo & prod. 
 
 Ultimately would prefer to [deploy a Docker image to Heroku](https://devcenter.heroku.com/articles/container-registry-and-runtime) — but currently that features is in beta and [support for pipelines is spotty](https://devcenter.heroku.com/articles/container-registry-and-runtime#known-issues-and-limitations).
 
 So for now, Docker and Heroku environments are aligned as closely as possible. Biggest exception being the Dockerfile runs [Debian Jessie](https://github.com/docker-library/ruby/blob/aba4590582d91d49926558ac27b9f005c7488bc9/2.3/slim/Dockerfile#L1), and Heroku uses [Cedar-14](https://devcenter.heroku.com/articles/stack#cedar) (Ubuntu 14.04 trusty).
-1. Install Heroku CLI.
+
+### Manual
+1. Install [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli).
 2. Use [Rails 5 Getting Started guide](https://devcenter.heroku.com/articles/getting-started-with-rails5) for first deployment.
 3. `source bin/deploy.sh` for iterative deploys.
 
-# Caveats
+### Continuous Deployment
+If the Travis build passes, it will automatically deploy to staging. See [.travis.yml](.travis.yml). 
+
+## SSL
+
+On the production app's custom domain, [Let's Encrypt](https://letsencrypt.org/) handles the free SSL certificate with Pixielab's [`letsencrypt-rails-heroku`](https://github.com/pixielabs/letsencrypt-rails-heroku) gem.
+
+Certificate is good for 90 days. To renew, run or schedule a variation of `heroku run -a jfmk-auth rake letsencrypt:renew`.
+
+# Alternatives and Caveats
 
 - __[S3Auth.com](http://s3auth.com)__ If you want a quick way to just password protect a static S3 website with Basic HTTP Auth, check out [S3Auth](https://github.com/yegor256/s3auth), and this related [article](http://www.yegor256.com/2014/04/21/s3-http-basic-auth.html).
 - __S3 auth proxy.__ There are a few other project that handle [S3 proxy with authentication](https://www.google.com/search?q=s3+proxy+auth). But one drawback is the app server becomes a bottleneck — which becomes more obvious for large files like video. A mix of pre-signed S3 expiring private content URLs, and publicly served S3 non-sensitive files (e.g. JS, CSS, some content) alleviates this. Admittedly, the proxy/injection I've cooked up is a little brittle — which leads to my next point.
-- __Simple content views.__ `app/controllers/pages_controller` which parses/proxies/pre-signs S3 content is tightly coupled to my personal needs. If you choose to clone/fork this project for the user management aspect, you'll probably want to yank that controller, related tests, and environment vars. You could just replace it with simple HTML/HAML views.
+- __Simple content views.__ `app/controllers/proxy_controller` which parses/proxies/pre-signs S3 content is tightly coupled to my personal needs. If you choose to clone/fork this project for the user management aspect, you'll probably want to yank that controller, related tests, and environment vars. You could just replace it with simple HTML/HAML views.
 - __Devise.__ In future projects I will use [Devise](https://github.com/plataformatec/devise) for authentication. Just wanted to write my own first to better understand the auth & user management process. 
 
 # Backlog Stories
-- Production instance mapped to custom domain with SSL 
 - IS_DEMO_MODE env var prohibits data manipulation. Add demo link to readme
 - Configure prod instance to send email notifications to admin when user logs in or is locked out
 - Use [Clearance](https://github.com/thoughtbot/clearance) to backdoor credentials in test
