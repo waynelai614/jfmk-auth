@@ -67,7 +67,7 @@ gem 'dotenv-rails', '~> 2.2.0'
 gem 'platform-api', git: 'https://github.com/jalada/platform-api', branch: 'master'
 
 # Let's Encrypt for SSL on Heroku
-gem 'letsencrypt-rails-heroku' #, group: 'production'
+gem 'letsencrypt-rails-heroku'
 
 group :development, :test do
   # Call 'byebug' anywhere in your code to drop into a debugger console
