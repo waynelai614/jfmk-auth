@@ -21,11 +21,8 @@ Simple Rails user management & authentication web app to proxy a private single-
 
 ## Required
 
-1. Install [Docker](https://www.docker.com/) 1.13.1+. This should also install Docker Compose 1.11.1+.
-2. Verify versions: 
-```
-docker -v; docker-compose -v;
-```
+1. Install [Docker](https://www.docker.com/) 17.03.0-ce+. This should also install Docker Compose 1.11.2+.
+2. Verify versions: `docker -v; docker-compose -v;`
 
 ## Recommended
 1. Install [pgAdmin](https://www.pgadmin.org/download/) for a SQL gui client. 
@@ -50,9 +47,9 @@ docker -v; docker-compose -v;
 `docker-compose down; docker-compose up -d; docker attach jfmkauth_web_1`
 A common call chain to stop any existing/hung containers, stand up all services in detached mode, connect to view web service only (to view running log and interact with byebug).
 
-`docker-compose exec web rails r bin/update` After a pull or update.
+`docker-compose exec web rails r bin/update` Performs Rails db migration, checks for bundle changes. This will install any new gems in the container but not the image - see next command.  
 
-`docker-compose build` If .Gemfile has changed, docker web image needs to be rebuilt. (TODO: make this [more dynamic](http://bradgessler.com/articles/docker-bundler/))
+`docker-compose build` If Gemfile or Gemfile.lock have changed, docker web image needs to be rebuilt. (TODO: make this [more dynamic](http://bradgessler.com/articles/docker-bundler/))
 
 
 ## Database

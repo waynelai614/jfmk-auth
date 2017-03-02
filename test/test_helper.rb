@@ -24,17 +24,20 @@ end
 
 # CAPYBARA
 # Use container's shell to find the docker ip address
-Capybara.app_host = "http://#{ENV['TEST_APP_HOST']}:3001"
+Capybara.app_host = "http://#{ENV['TEST_APP_HOST']}:#{ENV['PORT']}"
 Capybara.javascript_driver = :selenium # TODO: add :webkit option for faster tests
 Capybara.run_server = false
-Capybara.server_port = 3001
+Capybara.server_port = ENV['PORT']
 
 args = ['--no-default-browser-check', '--start-maximized', '--disable-web-security', '--allow-hidden-media-playback']
 caps = Selenium::WebDriver::Remote::Capabilities.chrome("chromeOptions" => {"args" => args})
 
 Capybara.register_driver :selenium do |app|
   Capybara::Selenium::Driver.new(
-      app, browser: :remote, url: "http://#{ENV['SELENIUM_HOST']}:4444/wd/hub", desired_capabilities: caps
+      app,
+      browser: :remote,
+      url: "http://#{ENV['SELENIUM_HOST']}:#{ENV['SELENIUM_PORT']}/wd/hub",
+      desired_capabilities: caps
   )
 end
 

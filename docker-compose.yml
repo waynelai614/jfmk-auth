@@ -1,4 +1,4 @@
-version: '2.1'
+version: '3.1'
 
 services:
   postgres:
@@ -21,15 +21,14 @@ services:
     # Allow interaction on detached sessions like byebug
     stdin_open: true
     tty: true
-
   test:
       build: .
       environment:
-        - BIND_ON=0.0.0.0
-        - PORT=3001
         - RAILS_ENV=test
-        - SELENIUM_HOST=selenium
         - TEST_APP_HOST=test
+        - PORT=3001
+        - SELENIUM_HOST=selenium
+        - SELENIUM_PORT=4444
       volumes:
         - '.:/jfmk_auth'
       depends_on:
