@@ -51,7 +51,7 @@ WORKDIR $INSTALL_PATH
 # By doing this, Docker will be smart enough to execute all
 # future commands from within this directory.
 
-COPY Gemfile Gemfile.lock ./
+COPY Gemfile* ./
 # This is going to copy in the Gemfile and Gemfile.lock from our
 # work station at a path relative to the Dockerfile to the
 # jfmk_auth/ path inside of the Docker image.
@@ -69,11 +69,10 @@ COPY Gemfile Gemfile.lock ./
 # cache all of our gems so that if we make an application code
 # change, it won't re-run bundle install unless a gem changed.
 
-RUN bundle install --binstubs
+RUN bundle install --binstubs --jobs 5
 # We want binstubs to be available so we can directly call sidekiq and
 # potentially other binaries as command overrides without depending on
-# bundle exec.
-# This is mainly due for production compatibility assurance.
+# bundle exec. This is mainly due for production compatibility assurance.
 
 COPY . .
 # This might look a bit alien but it's copying in everything from
