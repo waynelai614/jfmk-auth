@@ -20,6 +20,11 @@ class ActiveSupport::TestCase
   # Minitest reporter
   Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new
 
+  # Climate Control to modify ENV
+  def with_modified_env(options, &block)
+    ClimateControl.modify(options, &block)
+  end
+
 end
 
 # CAPYBARA

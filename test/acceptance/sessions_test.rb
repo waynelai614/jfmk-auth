@@ -101,4 +101,5 @@ class SessionsTest < AcceptanceTest
   # TODO: How to test content expiration/logout timeout? Could fake it in a controller/integration test.
   # Can't figure out how to set ENV var for a single capy/selenium test
   # Integration solution: http://stackoverflow.com/a/6501780/281809
+  # Or this? https://github.com/railsware/rack_session_access
 end

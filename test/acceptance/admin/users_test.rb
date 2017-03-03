@@ -32,6 +32,7 @@ class Admin::UsersTest < AcceptanceTest
     User.all.order(created_at: :desc).all.each_with_index do |u, idx|
       assert @users_page.has_user_row_attributes?(u, idx)
     end
+    assert @users_page.has_no_demo_mode_flash?
 
     # Add new user
     @users_page.click_new_user
@@ -176,5 +177,83 @@ class Admin::UsersTest < AcceptanceTest
     assert @users_page.has_no_user_row_by_id(my_user2_id)
     assert page.has_no_content? my_user2[:username]
     assert @users_page.has_users_count? user_orig_count
+  end
+
+  describe "Demo Mode" do
+    before do
+      def set_demo_mode(val)
+        visit "#{root_path}test_backdoor/?IS_DEMO_MODE=#{val}"
+        assert page.has_content? 'backdoor success'
+      end
+      set_demo_mode '1'
+    end
+
+    test "Admin cannot create/edit/destroy any users" do
+      visit root_path
+
+      # Admin login
+      @sessions_page.fill_login 'admin', 'Secret1'
+      @sessions_page.click_login_btn
+
+      # Admin root page
+      assert_current_path admin_root_path
+      assert @users_page.has_no_demo_mode_flash?
+      @users_page.click_btn_link('Manage Users')
+
+      # Users page
+      assert_current_path admin_users_path
+      assert @users_page.has_demo_mode_flash?
+      orig_count = User.count
+      assert @users_page.has_users_count?(orig_count)
+
+      # New user validates, but does not save
+      @users_page.click_new_user
+      assert_current_path new_admin_user_path
+      assert @users_page.has_no_demo_mode_flash?
+      @users_page.fill_in(:username, 'client')
+      @users_page.fill_in(:password, 'Secret1')
+      @users_page.send_key_return
+      assert @users_page.has_errors?(1)
+      assert @users_page.has_input_error?(:username, "Username has already been taken")
+      @users_page.fill_in(:username, 'client2')
+      @users_page.fill_in(:password, 'Secret1')
+      @users_page.send_key_return
+
+      # No client2 listed on index page
+      assert_current_path admin_users_path
+      assert @users_page.has_users_count?(orig_count)
+      assert page.has_no_content?('client2')
+
+      # Edit user
+      my_user = User.find_by_username('admin')
+      @users_page.click_user_action(my_user.id, :edit)
+
+      # Edit user validates, but does not save
+      assert_current_path edit_admin_user_path(my_user.id)
+      assert @users_page.has_no_demo_mode_flash?
+      @users_page.fill_in(:username, 'bad username')
+      @users_page.send_key_return
+      assert @users_page.has_errors?(1)
+      assert @users_page.has_input_error?(:username, "Username must be alpha-numeric")
+      @users_page.fill_in(:username, 'adminedit')
+      @users_page.send_key_return
+
+      # Back to users index, admin has same username
+      assert_current_path admin_users_path
+      assert @users_page.has_demo_mode_flash?
+      assert @users_page.has_user_row_attributes?(users('admin'), 0)
+
+      # Delete user does not save
+      assert @users_page.has_demo_mode_flash?
+      @users_page.click_user_action(my_user.id, :delete)
+      page.accept_confirm("Are you sure you want to delete user '#{my_user.username}'?")
+      assert @users_page.has_users_count?(orig_count)
+      assert @users_page.has_user_row_attributes?(users('admin'), 0)
+      assert @users_page.has_users_count? orig_count
+    end
+
+    after do
+      set_demo_mode '0'
+    end
   end
 end

@@ -80,6 +80,7 @@ GEM
       minitest (>= 4)
     childprocess (0.6.2)
       ffi (~> 1.0, >= 1.0.11)
+    climate_control (0.1.0)
     coffee-rails (4.2.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.2.x)
@@ -263,6 +264,7 @@ DEPENDENCIES
   bootstrap-sass (~> 3.3)
   byebug
   capybara_minitest_spec (~> 1.0)
+  climate_control
   coffee-rails (~> 4.2.1)
   dotenv-rails (~> 2.2.0)
   font-awesome-rails (~> 4.7)

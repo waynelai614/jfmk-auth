@@ -150,6 +150,14 @@ class Admin::UsersPage < Admin::AdminPage
     page.uncheck id: input_id(:login_locked)
   end
 
+  def has_demo_mode_flash?
+    page.has_css?('.alert-warning', text: Admin::UsersController::DEMO_MSG)
+  end
+
+  def has_no_demo_mode_flash?
+    page.has_no_css?('.alert-warning', text: Admin::UsersController::DEMO_MSG)
+  end
+
   private
 
   def input_id(id) # :username, :password, :first_name, :last_name, :login_locked

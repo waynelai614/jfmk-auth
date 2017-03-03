@@ -31,4 +31,9 @@ class ApplicationController < ActionController::Base
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
   end
+
+  def is_demo_mode?
+    # Don't set this flag as a constant b/c test env changes it
+    ENV['IS_DEMO_MODE'] == '1'
+  end
 end
