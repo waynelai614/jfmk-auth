@@ -69,10 +69,8 @@ COPY Gemfile* ./
 # cache all of our gems so that if we make an application code
 # change, it won't re-run bundle install unless a gem changed.
 
-RUN bundle install --binstubs --jobs 5
-# We want binstubs to be available so we can directly call sidekiq and
-# potentially other binaries as command overrides without depending on
-# bundle exec. This is mainly due for production compatibility assurance.
+RUN bundle install --jobs 5
+# Install all gems. Paralleize the jobs for faster install.
 
 COPY . .
 # This might look a bit alien but it's copying in everything from
