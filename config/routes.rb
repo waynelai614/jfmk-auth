@@ -5,9 +5,8 @@ Rails.application.routes.draw do
   post 'login', to: 'sessions#login'
   get 'logout', to: 'sessions#logout'
 
-  get 'admin', to: redirect('admin/users')
-
   namespace :admin do
+    root 'admin#index'
     resources :users
   end
 end

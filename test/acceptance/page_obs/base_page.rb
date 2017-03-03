@@ -1,7 +1,7 @@
 require 'minitest/rails/capybara'
 require 'helpers/custom_matchers'
 
-module Pages
+module Page
   class Base
     include Capybara::CustomMatchers
 
