@@ -7,23 +7,26 @@ JFMK-Auth
 
 Simple Rails user management & authentication web app to proxy a private single-page app with pre-signed, expiring content URLs from AWS S3.
 
-## Demo
-
-https://jfmk-auth-demo.herokuapp.com
-username: admin
-password: Admin123
-- In demo mode, new users will not be saved, and existing users will not be updated, or deleted. This is done in order to keep the users active for future visitors to login, and prevent abuse of the system.
-- App uses a 'free' dyno/machine so it is probably sleeping and may be a little sluggish starting up.
-
 ## Technologies
 
 - Rails 5, Postgres, Selenium, AWS S3, HAML, CoffeeScript, Bootstrap, SCSS
-- Docker Compose for development, test and Travis CI; and Heroku for deployments.
+- Docker Compose for development, test and Travis CI; and Heroku Pipelines for deployments.
 - Simple [`has_secure_password`](http://api.rubyonrails.org/classes/ActiveModel/SecurePassword/ClassMethods.html) Rails API for authentication & cookie sessions. User is locked out after X failed attempts.
-- Tests with MiniTest for model units, and Capybara Selenium acceptance tests running in a docker service with Chrome standalone.
+- Tests with MiniTest for models & integration, and Capybara Selenium acceptance tests running in a docker service with Chrome standalone.
 - VNC locally into the Selenium session to interact and debug.
-- Authenticated users are served single-page app with a proxied index page, and expiring pre-signed URLs for sensitive S3 hosted content are parsed/injected. Demo content is instance of [jfroom/portfolio-web](//github.com/jfroom/portfolio-web).
-- Project initially seeded with [nickjj/orats](nickjj/orats) template.
+- Authenticated users are served single-page app with a proxied index page, and expiring pre-signed URLs for sensitive S3 hosted content are parsed/injected. Demo content is instance of [`jfroom/portfolio-web`](//github.com/jfroom/portfolio-web).
+- Let's Encrypt SSL certificates auto bound to the custom Heroku domain with [`letsencrypt-rails-heroku`](https://github.com/pixielabs/letsencrypt-rails-heroku).
+- Project initially seeded with [`nickjj/orats`](//github.com/nickjj/orats) template which was very helpful figuring out the `docker-compose` setup.
+
+## Demo
+
+>https://jfmk-auth-demo.herokuapp.com<br/>
+>__Credentials__<br/>
+>- admin:Admin123<br/>
+>- user:User123<br/>
+
+- In demo mode, new users will not be saved, and existing users will not be updated, or deleted. Users will also not be locked out after repeat fails. This is done in order to keep the users active for future visitors to demo, and to prevent system abuse.
+- Demo instance runs on a 'free' dyno server so it is probably sleeping, and may be a little sluggish starting up.
 
 # Getting started
 
@@ -76,10 +79,15 @@ To visit the test app on local machine: `open http://localhost:3001/`. To visit 
 
 Commits to master are automatically tested by [Travis CI](https://travis-ci.org/jfroom/jfmk-auth). 
 
+Tests use: 
+- [`railsware/rack_session_access`](//github.com/railsware/rack_session_access) with Capybara to conveniently bypass session authenticating which speeds tests up.
+- [`thoughtbot/climate_control`](//github.com/thoughtbot/climate_control) to adjust ENV vars for models/integration, and a custom `/test/backdoor/` route for the capybara test enviornemnt only to adjust ENV.
+
+
 ## Deploy
 
 ### Environment
-Deploys to a [Heroku pipeline](https://devcenter.heroku.com/articles/pipelines) to three different apps: staging, demo and production. Currently, releases are infrequent, so just using the Heroku Pipelines GUI to promote staging to demo & prod. 
+Deploys to a [Heroku pipeline](https://devcenter.heroku.com/articles/pipelines) with three different apps: staging, demo and production. Currently, releases are infrequent, so just using the Heroku Pipelines GUI to promote staging to demo & prod. 
 
 Ultimately would prefer to [deploy a Docker image to Heroku](https://devcenter.heroku.com/articles/container-registry-and-runtime) — but currently that features is in beta and [support for pipelines is spotty](https://devcenter.heroku.com/articles/container-registry-and-runtime#known-issues-and-limitations).
 
@@ -93,9 +101,9 @@ So for now, Docker and Heroku environments are aligned as closely as possible. B
 ### Continuous Deployment
 If the Travis build passes, it will automatically deploy to staging. See [.travis.yml](.travis.yml). 
 
-## SSL
+### SSL
 
-On the production app's custom domain, [Let's Encrypt](https://letsencrypt.org/) handles the free SSL certificate with Pixielab's [`letsencrypt-rails-heroku`](https://github.com/pixielabs/letsencrypt-rails-heroku) gem.
+On the production app's custom domain, [Let's Encrypt](https://letsencrypt.org/) handles the free SSL certificate with Pixielab's [`pixielabs/letsencrypt-rails-heroku`](https://github.com/pixielabs/letsencrypt-rails-heroku) gem.
 
 Certificate is good for 90 days. To renew, run or schedule a variation of `heroku run -a jfmk-auth rake letsencrypt:renew`.
 
