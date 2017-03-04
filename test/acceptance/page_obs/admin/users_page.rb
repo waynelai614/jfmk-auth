@@ -1,11 +1,7 @@
-require "acceptance/page_obs/base_page"
+require "acceptance/page_obs/admin/admin_page"
 
-class Admin::UsersPage < Pages::Base
+class Admin::UsersPage < Admin::AdminPage
   ATTRIBUTES = [:username, :first_name, :last_name, :admin, :login_locked, :login_attempts].freeze
-
-  def has_log_out?(first_name)
-    page.has_css? 'a#log-out', text: "Log Out, #{first_name}"
-  end
 
   def has_user_table_header?
     # Verify number of TH vs. attributes
@@ -56,45 +52,6 @@ class Admin::UsersPage < Pages::Base
 
   def has_users_count?(count)
     page.has_css?('table.users tbody tr', count: count)
-  end
-
-  def has_num_user_records?(count)
-    page.has_css?('table.users tr', count: count + 1) # Add one for the TH row
-  end
-
-  def has_no_breadcrumb?
-    page.has_no_css?('.breadcrumb')
-  end
-
-  def has_headline?(headline)
-    page.has_css?('h1', text: headline)
-  end
-
-  def has_breadcrumb?(arr)
-    css = '.breadcrumb li'
-    unless page.has_css?(css, count: arr.size)
-      raise "Expected breadcrumb to have #{arr.size} items, but found #{page.all(css).size}."
-    end
-    arr.each_with_index do |item, idx| # item = {label: 'Label', link: 'path'}
-      item_css = "#{css}:nth-of-type(#{idx + 1})"
-      if idx < arr.length - 1
-        # Non-last items have link and label
-        item_css += " a[href='#{item[:link]}']"
-        unless page.has_css?(item_css, text: item[:label])
-          raise "Expected breadcrumb[#{idx}] to have link: '#{item[:link]}' " \
-            "and label: '#{item[:label]}', but it does not."
-        end
-      else
-        # Last item has .active and no link
-        item_css += '.active'
-        if !page.has_css?(item_css, text: item[:label])
-          raise "Expected breadcrumb[#{idx}] to have label: '#{item[:label]}', but it does not."
-        elsif page.has_css?(item_css + ' a')
-          raise "Expected breadcrumb[#{idx}] to have no link, but found one."
-        end
-      end
-    end
-    true
   end
 
   def click_new_user
@@ -191,6 +148,14 @@ class Admin::UsersPage < Pages::Base
 
   def uncheck(id)
     page.uncheck id: input_id(:login_locked)
+  end
+
+  def has_demo_mode_flash?
+    page.has_css?('.alert-warning', text: Admin::UsersController::DEMO_MSG)
+  end
+
+  def has_no_demo_mode_flash?
+    page.has_no_css?('.alert-warning', text: Admin::UsersController::DEMO_MSG)
   end
 
   private

@@ -30,16 +30,16 @@ class User < ApplicationRecord
       # Returns user if credentials authenticate, and reset login_attempts.
       if user.authenticate(password)
         user.update!(login_attempts: 0)
-        user
-      else
+        return user
+      elsif ENV['IS_DEMO_MODE'] != '1'
         # Increments .login_attempts and sets .login_locked if exceeds limit.
         user.login_attempts += 1
         if user.login_attempts >= MAX_LOGIN_ATTEMPTS
           user.login_locked = true
         end
         user.save!
-        nil
-      end
+       end
+      nil
     end
   end
 

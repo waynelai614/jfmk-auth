@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
     # Non-admin users trying to access /admin prefixed paths are redirected to root
     path = Rails.application.routes.recognize_path request.env['PATH_INFO']
     top_path = "/#{path[:controller].split('/')[0]}"
-    if top_path == admin_path && !@current_user.admin?
+    if top_path == admin_root_path && !@current_user.admin?
       redirect_to root_path
     end
   end
@@ -30,5 +30,10 @@ class ApplicationController < ActionController::Base
     response.headers["Cache-Control"] = "no-cache, no-store"
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+  end
+
+  def is_demo_mode?
+    # Don't set this flag as a constant b/c test env changes it
+    ENV['IS_DEMO_MODE'] == '1'
   end
 end

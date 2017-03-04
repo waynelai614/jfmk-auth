@@ -9,7 +9,7 @@ class SessionsController < ApplicationController
       session[:user_id] = user.id
 
       # Admin goes to admin page, all other users go to root content page
-      redirect_to user.admin? ? admin_path : root_path
+      redirect_to user.admin? ? admin_root_path : root_path
     else
       flash.now[:alert] =
           if User.is_login_locked?(params[:username])

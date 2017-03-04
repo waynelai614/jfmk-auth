@@ -1,6 +1,6 @@
 require "acceptance/page_obs/base_page"
 
-class SessionsPage < Pages::Base
+class SessionsPage < Page::Base
   CSS_LOGIN_BTN = "#login".freeze
 
   def submit_disabled?

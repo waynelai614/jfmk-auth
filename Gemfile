@@ -101,6 +101,12 @@ group :test do
   # Selenium
   gem 'selenium-webdriver', '~> 3.0'
   gem 'capybara_minitest_spec', '~> 1.0'
+
+  # Climate control to change ENV vars
+  gem 'climate_control'
+
+  # Edit session in test
+  gem 'rack_session_access'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

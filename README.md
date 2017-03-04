@@ -99,10 +99,9 @@ Certificate is good for 90 days. To renew, run or schedule a variation of `herok
 - __Devise.__ In future projects I will use [Devise](https://github.com/plataformatec/devise) for authentication. Just wanted to write my own first to better understand the auth & user management process. 
 
 # Backlog Stories
-- IS_DEMO_MODE env var prohibits data manipulation. Add demo link to readme
+- Integrate Google Analytics
 - Configure prod instance to send email notifications to admin when user logs in or is locked out
-- Use [Clearance](https://github.com/thoughtbot/clearance) to backdoor credentials in test
-- Enhance logging on Heroku with [Papertrail}(https://elements.heroku.com/addons/papertrail)? 
+- Enhance logging on Heroku with [Papertrail}(https://elements.heroku.com/addons/papertrail)?
 
 # License
 Copyright © JFMK, LLC Released under the [MIT License](https://github.com/jfroom/jfmk-auth/blob/master/LICENSE).

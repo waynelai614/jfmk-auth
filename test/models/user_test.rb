@@ -33,10 +33,10 @@ class UserTest < ActiveSupport::TestCase
       assert u.is_a?(User)
 
       # Incrementally lock the account
-      3.times do |idx|
+      User::MAX_LOGIN_ATTEMPTS.times do |idx|
         assert User.authenticate!('client', 'badPassword').nil?
         u.reload # Reload static copy from db
-        if idx < 2
+        if idx < User::MAX_LOGIN_ATTEMPTS - 1
           assert_not User.is_login_locked?('client')
         else
           assert User.is_login_locked?('client')
@@ -57,6 +57,21 @@ class UserTest < ActiveSupport::TestCase
     should 'not allow locked user from logging in' do
       assert User.authenticate!('clientlocked', 'Secret1').nil? # Correct password fails.
       assert User.authenticate!('clientlocked', 'badPassword').nil? # Wrong password fails.
+    end
+
+    should 'demo mode should not allow locking' do
+      with_modified_env IS_DEMO_MODE: '1' do
+        # Good login
+        u = User.authenticate!('client', 'Secret1')
+        assert u.is_a?(User)
+
+        # No locks
+        (User::MAX_LOGIN_ATTEMPTS + 1).times do |idx|
+          assert User.authenticate!('client', 'badPassword').nil?
+          u.reload # Reload static copy from db
+          assert_not User.is_login_locked?('client')
+        end
+      end
     end
   end
 end

@@ -1,8 +1,10 @@
 class Admin::UsersController < ApplicationController
   FORM_VIEW = 'admin/users/user_form'.freeze
+  DEMO_MSG = 'In demo mode, new users will not be saved, and existing users will not be updated, or deleted.'.freeze
 
   def index
     @users = User.all.order(created_at: :desc)
+    flash.now[:warning] = DEMO_MSG if is_demo_mode?
   end
 
   def new
@@ -13,7 +15,10 @@ class Admin::UsersController < ApplicationController
   end
 
   def create
-    @user = User.create user_params
+    User.transaction do
+      @user = User.create user_params
+      raise ActiveRecord::Rollback if is_demo_mode?
+    end
     if @user.valid?
       redirect_to admin_users_path
     else
@@ -39,7 +44,11 @@ class Admin::UsersController < ApplicationController
 
   def update
     @user = User.find_by_id params[:id]
-    if @user.update user_params
+    User.transaction do
+      @user.update user_params
+      raise ActiveRecord::Rollback if is_demo_mode?
+    end
+    if @user.valid?
       redirect_to admin_users_path
     else
       # Show errors
@@ -50,7 +59,7 @@ class Admin::UsersController < ApplicationController
 
   def destroy
     @user = User.find_by_id params[:id]
-    if @user.destroy
+    if is_demo_mode? || @user.destroy
       redirect_to admin_users_path, info: "User '#{@user.username}' was successfully deleted."
     else
       redirect_to admin_users_path, alert: "Error deleting user #{@user.username}."
