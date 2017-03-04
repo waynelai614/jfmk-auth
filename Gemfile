@@ -69,6 +69,9 @@ gem 'platform-api', git: 'https://github.com/jalada/platform-api', branch: 'mast
 # Let's Encrypt for SSL on Heroku
 gem 'letsencrypt-rails-heroku'
 
+# New Relic performance monitoring
+gem 'newrelic_rpm'
+
 group :development, :test do
   # Call 'byebug' anywhere in your code to drop into a debugger console
   gem 'byebug', platform: :mri
