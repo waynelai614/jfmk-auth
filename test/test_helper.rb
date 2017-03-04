@@ -6,6 +6,7 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 require 'rails/test_help'
 require 'minitest/reporters'
 require 'minitest/rails/capybara'
+require 'rack_session_access/capybara'
 
 # Ensure all migrations applied to test db
 ActiveRecord::Migration.check_pending!
@@ -67,5 +68,11 @@ class AcceptanceTest < Capybara::Rails::TestCase
 
   def reload!
     page.driver.browser.navigate.refresh
+  end
+
+  def set_backdoor(vals) # {key: val, key2: val}
+    vals = vals.keys.map { |key| "#{key}=#{vals[key]}"}
+    visit "#{root_path}test/backdoor/?#{vals.join('&')}"
+    assert page.has_content? 'backdoor success'
   end
 end

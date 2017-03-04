@@ -9,11 +9,10 @@ class ProxyTest < AcceptanceTest
   end
 
   test "Verify homepage" do
-    # Root url immediately redirects to login_path because it's a new session
-    visit root_path
-    @sessions_page.fill_login 'client', 'Secret1'
-    @sessions_page.click_login_btn
+    # Backdoor set user session
+    page.set_rack_session user_id: User.find_by_username('client').id
 
+    visit root_path
     assert_current_path root_path
     assert @proxy_page.has_proxy_content?
     assert @proxy_page.has_log_out?('Client')

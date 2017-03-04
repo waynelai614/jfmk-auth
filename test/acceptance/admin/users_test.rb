@@ -11,12 +11,12 @@ class Admin::UsersTest < AcceptanceTest
   end
 
   test "Admin can login, see users list, view/edit/delete users" do
+    # Backdoor set user session
+    page.set_rack_session(user_id: User.find_by_username('admin').id)
+
     # Admin user redirected to admin page
-    visit root_path
-    assert_current_path login_path
-    assert @users_page.has_no_breadcrumb?
-    @sessions_page.fill_login 'admin', 'Secret1'
-    @sessions_page.click_login_btn
+    visit admin_root_path
+    assert_current_path admin_root_path
 
     # Visit manage users page
     @users_page.click_btn_link 'Manage Users'
@@ -186,16 +186,12 @@ class Admin::UsersTest < AcceptanceTest
         assert page.has_content? 'backdoor success'
       end
       set_demo_mode '1'
+      page.set_rack_session user_id: User.find_by_username('admin').id
     end
 
     test "Admin cannot create/edit/destroy any users" do
-      visit root_path
-
-      # Admin login
-      @sessions_page.fill_login 'admin', 'Secret1'
-      @sessions_page.click_login_btn
-
       # Admin root page
+      visit admin_root_path
       assert_current_path admin_root_path
       assert @users_page.has_no_demo_mode_flash?
       @users_page.click_btn_link('Manage Users')

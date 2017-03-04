@@ -104,6 +104,9 @@ group :test do
 
   # Climate control to change ENV vars
   gem 'climate_control'
+
+  # Edit session in test
+  gem 'rack_session_access'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

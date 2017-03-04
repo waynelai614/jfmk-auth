@@ -10,14 +10,5 @@ Rails.application.routes.draw do
     resources :users
   end
 
-  # TODO: replace this with session based var and use https://github.com/railsware/rack_session_access in test
-  if Rails.env.test?
-    get '/test_backdoor' => 'test_backdoor#index'
-    class TestBackdoorController < ActionController::Base
-      def index
-        ENV['IS_DEMO_MODE'] = params[:IS_DEMO_MODE] if params[:IS_DEMO_MODE].present?
-        render text: 'backdoor success'
-      end
-    end
-  end
+  Test::BackdoorController.load_routes if Rails.env.test?
 end
