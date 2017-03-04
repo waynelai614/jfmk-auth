@@ -45,9 +45,9 @@ class ProxyController < ApplicationController
     if ENV['GOOGLE_ANALYTICS_UA'].present?
       # Inject Google Analytics ID & userId
       out.sub! /(ga\('create',).*\);/,
-               "ga('create', '#{ENV['GOOGLE_ANALYTICS_UA']}', '#{ENV['GOOGLE_ANALYTICS_PRODUCTION_HOSTNAME']}');"
+               "ga('create', '#{ENV['GOOGLE_ANALYTICS_UA']}', 'auto');"
       out.sub! /\/\/ ga\('set', 'userId', '\#\{USER_ID\}'\);/,
-               "ga('set', 'userId', '#{@current_user.username}');"
+               "ga('set', 'userId', '#{@current_user.id}');"
     end
 
     # Inject 'Log Out, Name'
