@@ -20,10 +20,11 @@ Simple Rails user management & authentication web app to proxy a private single-
 
 ## Demo
 
->https://jfmk-auth-demo.herokuapp.com<br/>
->__Credentials__<br/>
->- admin:Admin123<br/>
->- user:User123<br/>
+https://jfmk-auth-demo.herokuapp.com
+
+Credentials:<br/>
+- admin:Admin123<br/>
+- user:User123<br/>
 
 - In demo mode, new users will not be saved, and existing users will not be updated, or deleted. Users will also not be locked out after repeat fails. This is done in order to keep the users active for future visitors to demo, and to prevent system abuse.
 - Demo instance runs on a 'free' dyno server so it is probably sleeping, and may be a little sluggish starting up.
