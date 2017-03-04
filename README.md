@@ -7,6 +7,14 @@ JFMK-Auth
 
 Simple Rails user management & authentication web app to proxy a private single-page app with pre-signed, expiring content URLs from AWS S3.
 
+## Demo
+
+https://jfmk-auth-demo.herokuapp.com
+username: admin
+password: Admin123
+- In demo mode, new users will not be saved, and existing users will not be updated, or deleted. This is done in order to keep the users active for future visitors to login, and prevent abuse of the system.
+- App uses a 'free' dyno/machine so it is probably sleeping and may be a little sluggish starting up.
+
 ## Technologies
 
 - Rails 5, Postgres, Selenium, AWS S3, HAML, CoffeeScript, Bootstrap, SCSS
