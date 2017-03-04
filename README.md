@@ -99,7 +99,6 @@ Certificate is good for 90 days. To renew, run or schedule a variation of `herok
 - __Devise.__ In future projects I will use [Devise](https://github.com/plataformatec/devise) for authentication. Just wanted to write my own first to better understand the auth & user management process. 
 
 # Backlog Stories
-- Use [rack_session_access](https://github.com/railsware/rack_session_access) to backdoor credentials and demo mode in test
 - Integrate Google Analytics
 - Configure prod instance to send email notifications to admin when user logs in or is locked out
 - Enhance logging on Heroku with [Papertrail}(https://elements.heroku.com/addons/papertrail)?

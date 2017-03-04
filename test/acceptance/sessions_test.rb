@@ -2,9 +2,6 @@ require "test_helper"
 require "acceptance/page_obs/sessions_page"
 require "acceptance/page_obs/proxy_page"
 
-# TODO: Use Clearance gem to speed up logins where not required to explicitly test authentication
-# https://github.com/thoughtbot/clearance
-
 class SessionsTest < AcceptanceTest
   before do
     @sessions_page = SessionsPage.new
