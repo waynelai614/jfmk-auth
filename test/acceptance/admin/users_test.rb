@@ -181,12 +181,9 @@ class Admin::UsersTest < AcceptanceTest
 
   describe "Demo Mode" do
     before do
-      def set_demo_mode(val)
-        visit "#{root_path}test_backdoor/?IS_DEMO_MODE=#{val}"
-        assert page.has_content? 'backdoor success'
-      end
-      set_demo_mode '1'
+      # Backdoor set user session & demo mode env
       page.set_rack_session user_id: User.find_by_username('admin').id
+      set_backdoor IS_DEMO_MODE: 1
     end
 
     test "Admin cannot create/edit/destroy any users" do
@@ -249,7 +246,7 @@ class Admin::UsersTest < AcceptanceTest
     end
 
     after do
-      set_demo_mode '0'
+      set_backdoor IS_DEMO_MODE: 0
     end
   end
 end
