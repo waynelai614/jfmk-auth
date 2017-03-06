@@ -144,9 +144,10 @@ class Admin::UsersTest < AcceptanceTest
     assert_current_path login_path
     assert @sessions_page.has_logout_alert?
 
-    # Login as admin again
-    @sessions_page.fill_login 'admin', 'Secret1'
-    @sessions_page.send_input_enter_key
+    # Backdoor login as admin again
+    page.set_rack_session(user_id: User.find_by_username('admin').id)
+    visit admin_root_path
+    assert_current_path admin_root_path
 
     # Visit manage users page
     @users_page.click_btn_link 'Manage Users'
@@ -184,6 +185,10 @@ class Admin::UsersTest < AcceptanceTest
       # Backdoor set user session & demo mode env
       page.set_rack_session user_id: User.find_by_username('admin').id
       set_backdoor IS_DEMO_MODE: 1
+    end
+
+    after do
+      set_backdoor IS_DEMO_MODE: 0
     end
 
     test "Admin cannot create/edit/destroy any users" do
@@ -243,10 +248,6 @@ class Admin::UsersTest < AcceptanceTest
       assert @users_page.has_users_count?(orig_count)
       assert @users_page.has_user_row_attributes?(users('admin'), 0)
       assert @users_page.has_users_count? orig_count
-    end
-
-    after do
-      set_backdoor IS_DEMO_MODE: 0
     end
   end
 end
