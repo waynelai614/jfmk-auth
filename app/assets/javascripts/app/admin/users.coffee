@@ -7,4 +7,3 @@ $(document).on "turbolinks:load", ->
   # If user hasn't given focus to a field yet, give it to field designated by the view.
   unless $('input:focus').length
     usernameInput.focus()
-    console.log usernameInput.length
