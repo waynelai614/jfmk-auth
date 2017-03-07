@@ -4,3 +4,6 @@ scss:
 ruby:
   enabled: true
   config_file: .rubocop.yml
+
+haml:
+  config_file: .haml-lint.yml
