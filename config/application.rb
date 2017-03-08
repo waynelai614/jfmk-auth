@@ -39,7 +39,8 @@ module JfmkAuth
       host: ENV['ACTION_MAILER_HOST']
     }
     config.action_mailer.default_options = {
-      from: ENV['ACTION_MAILER_DEFAULT_FROM']
+      from: ENV['ACTION_MAILER_DEFAULT_FROM'],
+      to: ENV['ACTION_MAILER_DEFAULT_TO'],
     }
 
     # Set Redis as the back-end for the cache.

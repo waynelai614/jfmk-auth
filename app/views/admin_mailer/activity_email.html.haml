@@ -1,0 +1,11 @@
+%h1 [#{@request.host}] User Activity
+%h2 Login for #{@user.first_name} #{@user.last_name}, @#{@user.username}
+%ul
+  %li
+    %strong DateTime: #{@time}
+  %li
+    %strong URL: #{@request.url}
+  %li
+    %strong Remote IP: #{@request.remote_ip}
+  %li
+    %strong User Agent: #{@request.user_agent}
