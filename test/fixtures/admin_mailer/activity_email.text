@@ -1,0 +1,10 @@
+[test.host] User Activity
+======================================
+
+Login for Client Smith, @client
+
+- DateTime: 2017-03-07 15:26:40 -0800
+- URL: http://test.host/
+- Remote IP: 0.0.0.0
+- User Agent: Rails Testing
+
