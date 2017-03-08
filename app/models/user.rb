@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  MAX_LOGIN_ATTEMPTS = 3
+  MAX_LOGIN_ATTEMPTS = 3.freeze
 
   validates :username, presence: true, uniqueness: true, length: {maximum: 32},
             format: {with: /\A[a-zA-Z\d]+\z/, message: 'must be alpha-numeric'}

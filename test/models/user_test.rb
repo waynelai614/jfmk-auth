@@ -27,7 +27,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   context 'authentication' do
-    should 'lock user after N login attempts' do
+    should "lock user after #{User::MAX_LOGIN_ATTEMPTS} login attempts" do
       # Good login
       u = User.authenticate!('client', 'Secret1')
       assert u.is_a?(User)
@@ -43,11 +43,15 @@ class UserTest < ActiveSupport::TestCase
         end
       end
 
-      # Good login won't work
+      # User locked, can not login
+      assert u.login_locked?
+      assert_equal u.login_attempts, User::MAX_LOGIN_ATTEMPTS
       assert User.authenticate!('client', 'Secret1').nil?
 
       # Unlock user
-      User.find_by_username('client').unlock
+      u.unlock
+      assert_not u.login_locked?
+      assert_equal u.login_attempts, 0
 
       # Good login
       u = User.authenticate!('client', 'Secret1')

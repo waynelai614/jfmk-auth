@@ -45,6 +45,7 @@ class Admin::UsersController < ApplicationController
   def update
     @user = User.find_by_id params[:id]
     User.transaction do
+      @user.unlock if @user.login_locked? && user_params[:login_locked] == '0'
       @user.update user_params
       raise ActiveRecord::Rollback if is_demo_mode?
     end

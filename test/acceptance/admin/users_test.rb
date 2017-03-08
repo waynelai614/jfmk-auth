@@ -8,15 +8,17 @@ class Admin::UsersTest < AcceptanceTest
     @sessions_page = SessionsPage.new
     @proxy_page = ProxyPage.new
     @users_page = Admin::UsersPage.new
+
+    def backdoor_admin
+      page.set_rack_session(user_id: User.find_by_username('admin').id)
+      visit admin_root_path
+      assert_current_path admin_root_path
+    end
   end
 
   test "Admin can login, see users list, view/edit/delete users" do
     # Backdoor set user session
-    page.set_rack_session(user_id: User.find_by_username('admin').id)
-
-    # Admin user redirected to admin page
-    visit admin_root_path
-    assert_current_path admin_root_path
+    backdoor_admin
 
     # Visit manage users page
     @users_page.click_btn_link 'Manage Users'
@@ -121,20 +123,20 @@ class Admin::UsersTest < AcceptanceTest
     assert @users_page.has_cancel_btn?
 
     # Change name
-    my_user2 = my_user.dup
-    my_user2[:first_name] = "#{my_user[:first_name]}2"
-    my_user2[:last_name] = "#{my_user[:last_name]}2"
-    @users_page.fill_in(:first_name, my_user2[:first_name])
-    @users_page.fill_in(:last_name, my_user2[:last_name])
+    my_user_dup = my_user.dup
+    my_user_dup[:first_name] = "#{my_user[:first_name]}2"
+    my_user_dup[:last_name] = "#{my_user[:last_name]}2"
+    @users_page.fill_in(:first_name, my_user_dup[:first_name])
+    @users_page.fill_in(:last_name, my_user_dup[:last_name])
     @users_page.click_save
 
     # Verify name changed in list
     assert @users_page.has_users_count? user_orig_count + 1
-    assert @users_page.has_user_row_attributes?(my_user2, 0)
+    assert @users_page.has_user_row_attributes?(my_user_dup, 0)
 
     # Verify can log in as user
     @users_page.click_log_out
-    @sessions_page.fill_login my_user2[:username], my_user2[:password]
+    @sessions_page.fill_login my_user_dup[:username], my_user_dup[:password]
     @sessions_page.click_login_btn
     assert_current_path root_path
     assert @proxy_page.has_proxy_content?
@@ -144,10 +146,8 @@ class Admin::UsersTest < AcceptanceTest
     assert_current_path login_path
     assert @sessions_page.has_logout_alert?
 
-    # Backdoor login as admin again
-    page.set_rack_session(user_id: User.find_by_username('admin').id)
-    visit admin_root_path
-    assert_current_path admin_root_path
+    # Admin login
+    backdoor_admin
 
     # Visit manage users page
     @users_page.click_btn_link 'Manage Users'
@@ -156,27 +156,35 @@ class Admin::UsersTest < AcceptanceTest
     # Verify can lock user
     @users_page.click_user_action(my_user_id, :edit)
     @users_page.check :login_locked
-    my_user2[:login_locked] = true
     @users_page.click_save
 
     # Verify login locked
-    assert @users_page.has_user_row_attributes?(my_user2, 0)
+    my_user_dup[:login_locked] = true
+    assert @users_page.has_user_row_attributes?(my_user_dup, 0)
+
+    # Verify user can not login
     @users_page.click_log_out
-    @sessions_page.fill_login my_user2[:username], my_user2[:password]
+    @sessions_page.fill_login my_user_dup[:username], my_user_dup[:password]
     @sessions_page.send_input_enter_key
     assert @sessions_page.has_lock_alert?
     assert @sessions_page.has_alert_count?(1)
 
-    # Verify can delete user
+    # Verify can unlock user
     @sessions_page.fill_login 'admin', 'Secret1'
     @sessions_page.send_input_enter_key
     @users_page.click_btn_link 'Manage Users'
     assert_current_path admin_users_path
-    my_user2_id = User.find_by_username(my_user2[:username]).id
-    @users_page.click_user_action(my_user2_id, :delete)
-    page.accept_confirm("Are you sure you want to delete user '#{my_user2[:username]}'?")
-    assert @users_page.has_no_user_row_by_id(my_user2_id)
-    assert page.has_no_content? my_user2[:username]
+    @users_page.click_user_action(my_user_id, :edit)
+    @users_page.check :login_locked
+    my_user_dup[:login_locked] = false
+    @users_page.click_save
+    assert @users_page.has_user_row_attributes?(my_user_dup, 0)
+
+    # Verify can delete user
+    @users_page.click_user_action(my_user_id, :delete)
+    page.accept_confirm("Are you sure you want to delete user '#{my_user_dup[:username]}'?")
+    assert @users_page.has_no_user_row_by_id(my_user_id)
+    assert page.has_no_content? my_user_dup[:username]
     assert @users_page.has_users_count? user_orig_count
   end
 
